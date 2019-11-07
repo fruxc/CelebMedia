@@ -26,6 +26,6 @@ class CreateTrgger extends Migration
        }
        public function down()
        {
-         DB::unprepared('DROP TRIGGER `DATE_TR`');
+         DB::unprepared('DROP TRIGGER `DATE_TR`'); 
        }
 }
