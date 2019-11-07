@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Products extends Model
 {
 
-        use Notifiable;
 
         /**
          * The attributes that are mass assignable.
@@ -19,7 +18,7 @@ class Products extends Model
         protected $primaryKey = 'id';
 
         protected $fillable = [
-          'type', 'quality', 'cost'
+          'type', 'quality', 'cost', 'name',
         ];
 
 }

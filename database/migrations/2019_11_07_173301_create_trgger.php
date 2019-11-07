@@ -11,25 +11,21 @@ class CreateTrgger extends Migration
      *
      * @return void
      */
-
-     <?php
-
-     use Illuminate\Support\Facades\Schema;
-     use Illuminate\Database\Schema\Blueprint;
-     use Illuminate\Database\Migrations\Migration;
-
-     class CreateTrigger extends Migration
+     public function up()
      {
-         public function up()
-         {
-               DB::unprepared('CREATE TRIGGER user_default_role AFTER INSERT ON `users` FOR EACH ROW
-                     BEGIN
-                        INSERT INTO `user_role` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (3, NEW.id, now(), null);
-                     END');
-         }
-         public function down()
-         {
-            DB::unprepared('DROP TRIGGER `user_default_role`');
-         }
-     }
+       DB::unprepared('CREATE TRIGGER DATE_TR
+         BEFORE INSERT ON services
+         FOR EACH ROW
+         BEGIN
+         IF(New.booking_date>=NOW()) THEN
+          CALL raise_application_error(20002,"DATE SHOULD NOT BE LESS THAN TODAYS DATE");
+         END IF;
+         END;
+         /
+         ');
+       }
+       public function down()
+       {
+         DB::unprepared('DROP TRIGGER `DATE_TR`');
+       }
 }

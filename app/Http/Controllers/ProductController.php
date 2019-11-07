@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Products;
 
 class ProductController extends Controller
 {
@@ -13,8 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-      $products = Product::latest()->paginate(5);
-
+      $products = Products::latest()->paginate(5);
       return view('products.index',compact('products'))
           ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -39,11 +39,12 @@ class ProductController extends Controller
     {
       $request->validate([
       'type' => ['required', 'string', 'max:255'],
+      'name' => ['required', 'string', 'max:255'],
       'quality' => ['required', 'string', 'max:255'],
-      'cost' => ['required', 'decimal'],
+      'cost' => ['required'],
       ]);
 
-      Product::create($request->all());
+      Products::create($request->all());
 
       return redirect()->route('products.index')
                       ->with('success','Product has been created successfully.');
@@ -57,7 +58,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-      return view('products.show',compact('product'));
+
+      $products = Products::find($id);
+      return view('products.show',compact('products'));
     }
 
     /**
@@ -68,7 +71,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-      return view('products.edit',compact('product'));
+      $products = Products::find($id);
+      return view('products.edit',compact('productsx'));
 
     }
 
@@ -82,12 +86,14 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
       $request->validate([
+      'name' => ['required', 'string', 'max:255'],
       'type' => ['required', 'string', 'max:255'],
       'quality' => ['required', 'string', 'max:255'],
-      'cost' => ['required', 'decimal'],
+      'cost' => ['required'],
       ]);
 
-      $id->update($request->all());
+      $products = Products::find($id);
+      $products->update($request->all());
 
       return redirect()->route('products.index')
                       ->with('success','Product has been created successfully.');
@@ -102,6 +108,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+      $products = Products::find($id);
+      $products->delete();
+
+      return redirect()->route('products.index')
+                      ->with('success','Product has been deleted successfully');
     }
 }
